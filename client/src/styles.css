@@ -18,14 +18,26 @@
   --radius-xl: 34px;
   --radius-lg: 24px;
   --radius-md: 16px;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 320px;
+  overflow-x: hidden;
 }
 
 html {
@@ -34,7 +46,7 @@ html {
 
 body {
   margin: 0;
-  min-width: 320px;
+  position: relative;
   background: radial-gradient(circle at top left, #fffaf5 0, #fff7f3 36%, #f6ecf2 74%, #f5eef6 100%);
   color: var(--ink);
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -59,10 +71,18 @@ button {
   cursor: pointer;
 }
 
+img,
+svg,
+video {
+  max-width: 100%;
+}
+
 .appShell {
   position: relative;
-  overflow: hidden;
+  width: 100%;
+  max-width: 100vw;
   min-height: 100vh;
+  overflow-x: hidden;
   padding-bottom: 2rem;
 }
 
@@ -95,13 +115,14 @@ button {
 .sectionContainer,
 .siteHeader {
   width: min(1180px, calc(100% - 36px));
+  max-width: 1180px;
   margin-inline: auto;
 }
 
 .siteHeader {
   position: sticky;
   top: 16px;
-  z-index: 20;
+  z-index: 80;
   margin-top: 16px;
   display: flex;
   align-items: center;
@@ -120,6 +141,7 @@ button {
   align-items: center;
   gap: 0.75rem;
   min-width: fit-content;
+  flex-shrink: 0;
 }
 
 .logoMark {
@@ -192,6 +214,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
+  flex-shrink: 0;
 }
 
 .languageToggle,
@@ -214,6 +237,7 @@ button {
   color: var(--purple);
   font-weight: 800;
   font-size: 0.78rem;
+  white-space: nowrap;
 }
 
 .languageToggle span {
@@ -237,16 +261,19 @@ button {
   box-shadow: 0 12px 24px rgba(200, 111, 120, 0.25);
   font-size: 0.82rem;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .menuButton {
   display: none;
   width: 42px;
   height: 42px;
-  place-items: center;
+  align-items: center;
+  justify-content: center;
   background: white;
   color: var(--purple);
   border: 1px solid var(--line);
+  flex-shrink: 0;
 }
 
 .languageToggle:hover,
@@ -259,13 +286,15 @@ button {
   transform: translateY(-2px);
 }
 
+/* Music button */
 .musicControl {
   position: fixed;
   left: 18px;
   bottom: 18px;
-  z-index: 30;
+  z-index: 70;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.55rem;
   max-width: calc(100vw - 36px);
   padding: 0.72rem 1rem;
@@ -276,6 +305,7 @@ button {
   backdrop-filter: blur(16px);
   font-size: 0.82rem;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .musicControl.needsClick {
@@ -283,10 +313,17 @@ button {
 }
 
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 20px 44px rgba(95, 59, 118, 0.22); }
-  50% { box-shadow: 0 24px 60px rgba(200, 111, 120, 0.42); }
+  0%,
+  100% {
+    box-shadow: 0 20px 44px rgba(95, 59, 118, 0.22);
+  }
+
+  50% {
+    box-shadow: 0 24px 60px rgba(200, 111, 120, 0.42);
+  }
 }
 
+/* Hero */
 .heroSection {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(360px, 0.95fr);
@@ -345,6 +382,15 @@ h3 {
   line-height: 1.15;
 }
 
+.heroCopy,
+.aboutCopy,
+.previewCopy,
+.footerBrand,
+.footerDetails,
+.newsletterBox {
+  min-width: 0;
+}
+
 .heroCopy p,
 .aboutCopy p,
 .sectionHeading p,
@@ -379,6 +425,7 @@ h3 {
   min-height: 52px;
   padding: 0.95rem 1.25rem;
   font-weight: 900;
+  text-align: center;
 }
 
 .primaryButton {
@@ -398,12 +445,18 @@ h3 {
   min-height: 540px;
   display: grid;
   place-items: center;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
 }
 
 .orb {
   position: absolute;
   border-radius: 45% 55% 44% 56%;
   filter: saturate(1.05);
+  pointer-events: none;
 }
 
 .orbPink {
@@ -431,11 +484,13 @@ h3 {
   background-image: radial-gradient(var(--rose) 1.4px, transparent 1.4px);
   background-size: 14px 14px;
   opacity: 0.35;
+  pointer-events: none;
 }
 
 .portraitCard {
   position: relative;
   width: min(100%, 500px);
+  max-width: 100%;
   min-height: 510px;
   border-radius: var(--radius-xl);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.88));
@@ -448,79 +503,15 @@ h3 {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  border-radius: inherit;
 }
 
-.portraitHead {
-  position: absolute;
-  top: 92px;
-  left: 50%;
-  width: 118px;
-  height: 142px;
-  transform: translateX(-28%);
-  border-radius: 48% 48% 46% 46%;
-  background: linear-gradient(155deg, #efc7ad, #d69b80);
-  z-index: 3;
-}
-
-.portraitHair {
-  position: absolute;
-  background: linear-gradient(160deg, #3f2532, #8d563f 58%, #c68a62);
-  z-index: 4;
-}
-
-.hairLeft {
-  width: 130px;
-  height: 210px;
-  top: 72px;
-  left: 44%;
-  transform: translateX(-74%) rotate(6deg);
-  border-radius: 65% 35% 60% 35%;
-}
-
-.hairRight {
-  width: 125px;
-  height: 250px;
-  top: 74px;
-  left: 53%;
-  transform: rotate(-10deg);
-  border-radius: 40% 70% 40% 60%;
-}
-
-.portraitBody {
-  position: absolute;
-  left: 50%;
-  bottom: 90px;
-  width: 310px;
-  height: 270px;
-  transform: translateX(-47%);
-  border-radius: 120px 120px 40px 40px;
-  background: linear-gradient(135deg, #fffdf9, #eecfc5);
-  z-index: 2;
-}
-
-.laptop {
-  position: absolute;
-  left: 10%;
-  bottom: 56px;
-  width: 58%;
-  height: 155px;
-  border-radius: 16px 16px 6px 6px;
-  background: linear-gradient(135deg, #d7cbd5, #f3edf3);
-  box-shadow: 0 12px 30px rgba(70, 45, 80, 0.16);
-  transform: perspective(240px) rotateX(3deg) rotateZ(-2deg);
-  z-index: 5;
-}
-
-.coffee {
-  position: absolute;
-  right: 12%;
-  bottom: 74px;
-  width: 58px;
-  height: 70px;
-  border-radius: 8px 8px 22px 22px;
-  background: linear-gradient(180deg, #fff, #edd0c5);
-  z-index: 6;
-  box-shadow: 0 12px 28px rgba(70, 45, 80, 0.13);
+.portraitImage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .experienceBadge {
@@ -554,9 +545,22 @@ h3 {
   line-height: 1.35;
 }
 
+/* Old CSS portrait fallback classes kept harmless */
+.portraitHead,
+.portraitHair,
+.hairLeft,
+.hairRight,
+.portraitBody,
+.laptop,
+.coffee,
+.miniPortrait {
+  display: none;
+}
+
+/* About */
 .aboutSection {
   display: grid;
-  grid-template-columns: 0.8fr 1.15fr 0.95fr;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.15fr) minmax(0, 0.95fr);
   gap: 1.6rem;
   align-items: center;
   padding: 2rem;
@@ -565,6 +569,7 @@ h3 {
   box-shadow: var(--shadow);
   border: 1px solid rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(18px);
+  overflow: hidden;
 }
 
 .videoCard {
@@ -573,6 +578,7 @@ h3 {
   overflow: hidden;
   background: linear-gradient(135deg, #f7e7e7, #d7bddb);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  min-width: 0;
 }
 
 .videoPortrait {
@@ -580,17 +586,17 @@ h3 {
   width: 100%;
   height: 100%;
   min-height: 260px;
+  overflow: hidden;
+  border-radius: inherit;
 }
 
-.miniPortrait {
-  position: absolute;
-  inset: 24px;
-  border-radius: 26px;
-  background:
-    radial-gradient(circle at 50% 30%, #d89d81 0 34px, transparent 35px),
-    radial-gradient(circle at 43% 25%, #6b3b35 0 48px, transparent 49px),
-    linear-gradient(160deg, transparent 0 42%, #fff9f6 43% 75%, transparent 76%),
-    linear-gradient(135deg, rgba(95, 59, 118, 0.18), rgba(200, 111, 120, 0.26));
+.videoPortrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  object-fit: cover;
+  object-position: center;
 }
 
 .playButton {
@@ -606,6 +612,7 @@ h3 {
   color: white;
   background: var(--coral);
   box-shadow: 0 16px 36px rgba(222, 125, 117, 0.35);
+  z-index: 3;
 }
 
 .aboutCopy h2 {
@@ -623,16 +630,18 @@ h3 {
 .pillarList {
   display: grid;
   gap: 1rem;
+  min-width: 0;
 }
 
 .pillarItem {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: 0.85rem;
   padding: 1rem;
   border: 1px solid var(--line);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.7);
+  min-width: 0;
 }
 
 .pillarItem p {
@@ -652,6 +661,7 @@ h3 {
   background: #fff2ef;
 }
 
+/* Shared sections */
 .servicesSection,
 .projectsSection,
 .packagesSection,
@@ -683,6 +693,7 @@ h3 {
 .testimonialGrid {
   display: grid;
   gap: 1rem;
+  width: 100%;
 }
 
 .fourGrid {
@@ -703,6 +714,7 @@ h3 {
   display: grid;
   min-height: 250px;
   padding: 1.35rem;
+  min-width: 0;
 }
 
 .serviceCard p {
@@ -724,11 +736,23 @@ h3 {
   color: white;
 }
 
-.tone1 { background: linear-gradient(135deg, var(--rose), #efaaa3); }
-.tone2 { background: linear-gradient(135deg, #8c5ca2, #cf9bd6); }
-.tone3 { background: linear-gradient(135deg, var(--gold), #efcc93); }
-.tone4 { background: linear-gradient(135deg, var(--purple), #9d73ac); }
+.tone1 {
+  background: linear-gradient(135deg, var(--rose), #efaaa3);
+}
 
+.tone2 {
+  background: linear-gradient(135deg, #8c5ca2, #cf9bd6);
+}
+
+.tone3 {
+  background: linear-gradient(135deg, var(--gold), #efcc93);
+}
+
+.tone4 {
+  background: linear-gradient(135deg, var(--purple), #9d73ac);
+}
+
+/* Projects */
 .projectGrid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -744,6 +768,7 @@ h3 {
   border-radius: var(--radius-lg);
   color: white;
   box-shadow: var(--shadow);
+  min-width: 0;
 }
 
 .projectCard::before {
@@ -766,19 +791,19 @@ h3 {
   background:
     radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.8) 0 5%, transparent 6%),
     linear-gradient(135deg, rgba(255, 235, 226, 0.88), rgba(96, 55, 82, 0.92)),
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.16) 0 12px, transparent 12px 24px);
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.16) 0 12px, transparent 12px 24px);
 }
 
 .project2::after {
   background:
-    radial-gradient(circle at 65% 35%, rgba(255,255,255,0.88) 0 11%, transparent 12%),
-    radial-gradient(circle at 35% 62%, rgba(255,255,255,0.72) 0 8%, transparent 9%),
+    radial-gradient(circle at 65% 35%, rgba(255, 255, 255, 0.88) 0 11%, transparent 12%),
+    radial-gradient(circle at 35% 62%, rgba(255, 255, 255, 0.72) 0 8%, transparent 9%),
     linear-gradient(135deg, #e9c8d3, #8f64a1);
 }
 
 .project3::after {
   background:
-    radial-gradient(circle at 68% 36%, rgba(234,191,119,0.8) 0 3%, transparent 4%),
+    radial-gradient(circle at 68% 36%, rgba(234, 191, 119, 0.8) 0 3%, transparent 4%),
     linear-gradient(135deg, #1e1725, #5f3b76 55%, #c86f78);
 }
 
@@ -815,6 +840,7 @@ h3 {
   font-weight: 900;
 }
 
+/* Metrics */
 .metricsStrip {
   padding-block: 1rem 4rem;
 }
@@ -835,10 +861,11 @@ h3 {
 
 .metricItem {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   column-gap: 0.75rem;
   align-items: center;
   padding: 0.8rem;
+  min-width: 0;
 }
 
 .metricItem span {
@@ -864,6 +891,7 @@ h3 {
   font-size: 0.86rem;
 }
 
+/* Packages */
 .packageGrid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -874,6 +902,7 @@ h3 {
   flex-direction: column;
   gap: 1rem;
   padding: 1.35rem;
+  min-width: 0;
 }
 
 .featuredPackage {
@@ -956,12 +985,14 @@ h3 {
   box-shadow: 0 16px 36px rgba(95, 59, 118, 0.17);
 }
 
+/* Testimonials */
 .testimonialGrid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .testimonialCard {
   padding: 1.4rem;
+  min-width: 0;
 }
 
 .testimonialCard svg {
@@ -983,9 +1014,10 @@ h3 {
   font-size: 0.87rem;
 }
 
+/* Responsive preview */
 .responsivePreview {
   display: grid;
-  grid-template-columns: 1fr minmax(260px, 360px);
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
   align-items: center;
   gap: clamp(2rem, 5vw, 5rem);
 }
@@ -997,12 +1029,14 @@ h3 {
 .phoneMockup {
   justify-self: center;
   width: min(100%, 340px);
+  max-width: 100%;
   min-height: 690px;
   padding: 1.3rem;
   border: 12px solid rgba(255, 255, 255, 0.8);
   border-radius: 42px;
   background: linear-gradient(180deg, #fffdfb, #fff3f0);
   box-shadow: var(--shadow);
+  overflow: hidden;
 }
 
 .phoneTop {
@@ -1044,11 +1078,16 @@ h3 {
 .phonePortrait {
   height: 220px;
   border-radius: 28px;
-  background:
-    radial-gradient(circle at 55% 35%, #d89d81 0 42px, transparent 43px),
-    radial-gradient(circle at 45% 30%, #5f342f 0 62px, transparent 63px),
-    linear-gradient(160deg, transparent 0 44%, #fffaf6 45% 76%, transparent 77%),
-    linear-gradient(135deg, #f6d6dd, #9d73ac);
+  overflow: hidden;
+  background: #f6d6dd;
+}
+
+.phonePortrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .phoneMockup h4 {
@@ -1058,15 +1097,17 @@ h3 {
   line-height: 1;
 }
 
+/* Footer */
 .siteFooter {
   display: grid;
-  grid-template-columns: 1.35fr 0.8fr 0.9fr;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.8fr) minmax(0, 0.9fr);
   gap: 2rem;
   padding: 2rem;
   border-radius: var(--radius-xl);
   color: white;
   background: linear-gradient(135deg, #503361, #9e5d8b 58%, #d77775);
   box-shadow: var(--shadow);
+  overflow: hidden;
 }
 
 .siteFooter .logoMark {
@@ -1097,6 +1138,7 @@ h3 {
 
 .footerSocials {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.6rem;
   margin-top: 1rem;
 }
@@ -1149,15 +1191,18 @@ h3 {
   border-radius: 999px;
   color: var(--purple);
   background: #fff;
+  flex-shrink: 0;
 }
 
+/* Floating WhatsApp */
 .floatingWhatsapp {
   position: fixed;
   right: 18px;
   bottom: 18px;
-  z-index: 31;
+  z-index: 71;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.55rem;
   padding: 0.82rem 1rem;
   border-radius: 999px;
@@ -1166,162 +1211,23 @@ h3 {
   box-shadow: 0 22px 48px rgba(18, 140, 126, 0.3);
   font-weight: 900;
   font-size: 0.86rem;
+  white-space: nowrap;
 }
 
-@media (max-width: 1100px) {
-  .desktopNav {
-    display: none;
-  }
-
-  .menuButton {
-    display: grid;
-  }
-
-  .heroSection,
-  .aboutSection,
-  .responsivePreview,
-  .siteFooter {
-    grid-template-columns: 1fr;
-  }
-
-  .heroVisual {
-    min-height: 500px;
-  }
-
-  .fourGrid,
-  .packageGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .metricsGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 760px) {
-  .sectionContainer,
-  .siteHeader {
-    width: min(100% - 24px, 1180px);
-  }
-
-  .siteHeader {
-    top: 8px;
-    border-radius: 24px;
-  }
-
-  .logoText,
-  .headerCta,
-  .languageToggle {
-    display: none;
-  }
-
-  .heroSection {
-    padding-top: 3.2rem;
-    grid-template-columns: 1fr;
-  }
-
-  h1 {
-    font-size: clamp(3rem, 16vw, 4.6rem);
-  }
-
-  .heroActions {
-    flex-direction: column;
-  }
-
-  .primaryButton,
-  .secondaryButton {
-    width: 100%;
-  }
-
-  .heroVisual {
-    min-height: 440px;
-  }
-
-  .portraitCard {
-    min-height: 430px;
-  }
-
-  .experienceBadge {
-    right: 18px;
-    top: 74px;
-    width: 134px;
-  }
-
-  .aboutSection {
-    padding: 1rem;
-  }
-
-  .fourGrid,
-  .projectGrid,
-  .metricsGrid,
-  .packageGrid,
-  .testimonialGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .featuredPackage {
-    transform: none;
-  }
-
-  .metricItem {
-    grid-template-columns: auto 1fr;
-  }
-
-  .phoneMockup {
-    min-height: auto;
-  }
-
-  .siteFooter {
-    padding: 1.2rem;
-  }
-
-  .newsletterBox form {
-    flex-direction: column;
-  }
-
-  .newsletterBox button {
-    width: 100%;
-  }
-
-  .musicControl,
-  .floatingWhatsapp {
-    left: 12px;
-    right: 12px;
-    justify-content: center;
-    width: calc(100% - 24px);
-  }
-
-  .musicControl {
-    bottom: 76px;
-  }
-
-  .floatingWhatsapp {
-    bottom: 14px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+/* Mobile hamburger menu */
 .mobileMenuOverlay {
   position: fixed;
   inset: 0;
   z-index: 120;
   background: rgba(42, 21, 51, 0.38);
   backdrop-filter: blur(10px);
-  display: none;
+  display: block;
   padding: 18px;
 }
 
 .mobileMenuPanel {
   width: min(100%, 420px);
+  max-width: 100%;
   margin-left: auto;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(255, 247, 244, 0.96));
@@ -1391,26 +1297,334 @@ h3 {
   box-shadow: 0 16px 34px rgba(123, 63, 152, 0.24);
 }
 
-@media (max-width: 900px) {
-  .mobileMenuOverlay {
-    display: block;
+/* Tablet */
+@media (max-width: 1100px) {
+  .desktopNav {
+    display: none;
   }
 
   .menuButton {
     display: inline-flex;
   }
 
-  .desktopNav {
-    display: none;
+  .heroSection,
+  .aboutSection,
+  .responsivePreview,
+  .siteFooter {
+    grid-template-columns: 1fr;
   }
 
-  .headerCta {
-    display: none;
+  .heroVisual {
+    min-height: 500px;
+  }
+
+  .fourGrid,
+  .packageGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metricsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .testimonialGrid,
+  .projectGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .featuredPackage {
+    transform: none;
   }
 }
 
-@media (min-width: 901px) {
+/* Mobile */
+@media (max-width: 760px) {
+  .sectionContainer,
+  .siteHeader {
+    width: calc(100% - 24px);
+    max-width: calc(100vw - 24px);
+  }
+
+  .siteHeader {
+    top: 8px;
+    margin-top: 8px;
+    padding: 0.6rem 0.65rem;
+    border-radius: 24px;
+  }
+
+  .logoText,
+  .headerCta {
+    display: none;
+  }
+
+  .languageToggle {
+    padding: 0.46rem 0.56rem;
+    font-size: 0.72rem;
+  }
+
+  .languageToggle span {
+    width: 24px;
+    height: 24px;
+  }
+
+  .menuButton {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+  }
+
+  .headerActions {
+    gap: 0.45rem;
+  }
+
+  .heroSection {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-top: 3.2rem;
+    padding-bottom: 2.8rem;
+  }
+
+  h1 {
+    max-width: 100%;
+    font-size: clamp(3rem, 15vw, 4.65rem);
+    line-height: 0.92;
+    overflow-wrap: break-word;
+  }
+
+  h2 {
+    font-size: clamp(2.15rem, 11vw, 3.2rem);
+    overflow-wrap: break-word;
+  }
+
+  .heroCopy,
+  .heroCopy p,
+  .aboutCopy,
+  .sectionHeading,
+  .previewCopy {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .heroActions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .heroVisual {
+    min-height: auto;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .portraitCard {
+    width: 100%;
+    max-width: 390px;
+    min-height: 430px;
+    margin: 0 auto;
+  }
+
+  .experienceBadge {
+    right: 16px;
+    top: 74px;
+    width: 134px;
+    padding: 0.85rem;
+  }
+
+  .aboutSection {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    padding: 1rem;
+    width: calc(100% - 24px);
+    max-width: calc(100vw - 24px);
+  }
+
+  .videoCard {
+    width: 100%;
+    min-height: 300px;
+  }
+
+  .videoPortrait {
+    min-height: 300px;
+  }
+
+  .videoPortrait img {
+    min-height: 300px;
+  }
+
+  .aboutCopy h2 {
+    font-size: clamp(2.1rem, 10vw, 3.05rem);
+  }
+
+  .pillarList {
+    width: 100%;
+  }
+
+  .fourGrid,
+  .projectGrid,
+  .metricsGrid,
+  .packageGrid,
+  .testimonialGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .glassCard,
+  .projectCard,
+  .packageCard,
+  .testimonialCard,
+  .metricItem {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .projectCard {
+    min-height: 260px;
+  }
+
+  .metricsStrip {
+    padding-block: 1rem 3rem;
+  }
+
+  .metricsGrid {
+    padding: 0.75rem;
+  }
+
+  .metricItem {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .packageCard h3 {
+    padding-right: 82px;
+  }
+
+  .responsivePreview {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .phoneMockup {
+    width: 100%;
+    max-width: 340px;
+    min-height: auto;
+    margin-inline: auto;
+    padding: 1rem;
+    border-width: 10px;
+    border-radius: 34px;
+  }
+
+  .phoneMockup h3 {
+    font-size: clamp(2rem, 10vw, 2.7rem);
+  }
+
+  .phonePortrait {
+    height: 220px;
+  }
+
+  .siteFooter {
+    grid-template-columns: 1fr;
+    width: calc(100% - 24px);
+    max-width: calc(100vw - 24px);
+    padding: 1.2rem;
+    gap: 1.4rem;
+  }
+
+  .newsletterBox form {
+    flex-direction: column;
+  }
+
+  .newsletterBox button {
+    width: 100%;
+  }
+
+  .musicControl,
+  .floatingWhatsapp {
+    left: 12px;
+    right: 12px;
+    justify-content: center;
+    width: calc(100% - 24px);
+    max-width: calc(100vw - 24px);
+  }
+
+  .musicControl {
+    bottom: 76px;
+  }
+
+  .floatingWhatsapp {
+    bottom: 14px;
+  }
+
   .mobileMenuOverlay {
-    display: none !important;
+    padding: 12px;
+  }
+
+  .mobileMenuPanel {
+    width: 100%;
+    border-radius: 26px;
+    padding: 16px;
+  }
+}
+
+/* Small iPhones */
+@media (max-width: 430px) {
+  .sectionContainer,
+  .siteHeader {
+    width: calc(100% - 20px);
+    max-width: calc(100vw - 20px);
+  }
+
+  .heroSection {
+    padding-top: 2.6rem;
+  }
+
+  h1 {
+    font-size: clamp(2.85rem, 15vw, 4.1rem);
+  }
+
+  .portraitCard {
+    max-width: 100%;
+    min-height: 390px;
+  }
+
+  .aboutSection,
+  .siteFooter {
+    width: calc(100% - 20px);
+    max-width: calc(100vw - 20px);
+  }
+
+  .videoCard,
+  .videoPortrait,
+  .videoPortrait img {
+    min-height: 280px;
+  }
+
+  .packageCard h3 {
+    padding-right: 72px;
+  }
+
+  .popularBadge {
+    right: 12px;
+    top: 12px;
+  }
+
+  .phoneMockup {
+    max-width: 100%;
+  }
+}
+
+/* Motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
