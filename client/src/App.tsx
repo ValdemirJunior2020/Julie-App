@@ -20,8 +20,9 @@ import {
   Star,
   Target,
   TrendingUp,
+  X,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { LanguageToggle } from './components/LanguageToggle';
 import { Logo } from './components/Logo';
@@ -42,8 +43,19 @@ const images = {
   about: '/images/julie-about.jpg',
 };
 
+const navTargets = [
+  'home',
+  'about',
+  'services',
+  'projects',
+  'packages',
+  'testimonials',
+  'contact',
+];
+
 export default function App() {
   const [language, setLanguage] = useState<Language>('en');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const t = content[language];
 
@@ -55,6 +67,27 @@ export default function App() {
     [language]
   );
 
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [mobileMenuOpen]);
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
+
   return (
     <div className="appShell">
       <div className="backgroundGlow glowOne" />
@@ -64,8 +97,8 @@ export default function App() {
         <Logo />
 
         <nav className="desktopNav" aria-label="Primary navigation">
-          {t.nav.map((item) => (
-            <a key={item} href={`#${item.toLowerCase().replace(/ /g, '-')}`}>
+          {t.nav.map((item, index) => (
+            <a key={item} href={`#${navTargets[index]}`}>
               {item}
             </a>
           ))}
@@ -89,11 +122,68 @@ export default function App() {
             {t.hero.secondary}
           </a>
 
-          <button className="menuButton" type="button" aria-label="Open menu">
-            <Menu size={22} />
+          <button
+            className="menuButton"
+            type="button"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
+            onClick={() => setMobileMenuOpen((current) => !current)}
+          >
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </header>
+
+      {mobileMenuOpen && (
+        <div className="mobileMenuOverlay" onClick={closeMobileMenu}>
+          <motion.nav
+            className="mobileMenuPanel"
+            aria-label="Mobile navigation"
+            initial={{ opacity: 0, y: -18, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.22 }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mobileMenuTop">
+              <Logo compact />
+              <button
+                type="button"
+                className="mobileCloseButton"
+                aria-label="Close menu"
+                onClick={closeMobileMenu}
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <div className="mobileMenuLinks">
+              {t.nav.map((item, index) => (
+                <a
+                  key={item}
+                  href={`#${navTargets[index]}`}
+                  onClick={closeMobileMenu}
+                >
+                  {item}
+                  <ArrowRight size={16} />
+                </a>
+              ))}
+            </div>
+
+            <a
+              className="mobileMenuCta"
+              href={`https://wa.me/${contact.whatsappNumber}?text=${encodeURIComponent(
+                whatsappMessage
+              )}`}
+              target="_blank"
+              rel="noreferrer"
+              onClick={closeMobileMenu}
+            >
+              <MessageCircle size={18} />
+              {t.hero.secondary}
+            </a>
+          </motion.nav>
+        </div>
+      )}
 
       <MusicController labels={t.music} />
 
@@ -473,13 +563,17 @@ export default function App() {
 
         <div className="footerDetails">
           <h3>{contact.name}</h3>
+
           <p>{contact.role}</p>
+
           <p>
             <MapPin size={16} /> {contact.location}
           </p>
+
           <p>
             <Mail size={16} /> {contact.email}
           </p>
+
           <p>
             <MessageCircle size={16} /> {contact.phoneDisplay}
           </p>
@@ -492,6 +586,7 @@ export default function App() {
 
           <form onSubmit={(event) => event.preventDefault()}>
             <input aria-label="Email address" placeholder={t.footer.emailPlaceholder} />
+
             <button type="submit">
               <ArrowRight size={18} />
             </button>
