@@ -8,7 +8,7 @@ export function Logo({ compact = false }: LogoProps) {
       <span className="logoMark" aria-hidden="true">JC</span>
       {!compact && (
         <span className="logoText">
-          <strong>Julie Caroline</strong>
+          <strong>Julie Sutherland</strong>
           <small>Marketing Strategist</small>
         </span>
       )}
