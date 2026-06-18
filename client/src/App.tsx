@@ -98,7 +98,7 @@ export default function App() {
             <div className="orb orbPurple" />
             <div className="dotPattern" />
             <div className="portraitCard">
-              <div className="portraitImage" aria-label="Julie Caroline creative marketing portrait illustration">
+              <div className="portraitImage" aria-label="Julie Sutherland creative marketing portrait illustration">
                 <div className="portraitHead" />
                 <div className="portraitHair hairLeft" />
                 <div className="portraitHair hairRight" />
